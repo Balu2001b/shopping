@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saved Addresses </title>
+
+   
+    <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="saved_address_responsive_screen.css">
+
+<!-- AOS CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" />
+
+     <link rel="icon" href="./fashion_logo1.JPG" type="">
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" 
+    integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" 
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    
+   
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+
+</head>
+<body>
+
+    <!----------------------------------Preloader section here---------------------->
+    <div id="preloader">
+        <p id="loader-text1"></p>
+        <img src="./preloader.gif" alt="">
+    </div>
+
+    <!------------------------------------Toast message section here------------------------->
+
+
+    <div id="toast-saveChanges" class="toast-saveChanges">Updated Successfully <i class="fa-solid fa-check"></i></div>
+    <div id="toast-deleted" class="toast-deleted">Deleted Successfully <i class="fa-solid fa-trash"></i></div>
+     <!----------------------------------Header Section---------------------------------->
+
+     <div class="menu-bar" data-aos="fade-down">
+        <a href="main.html" style="text-decoration: none;"><h1 class="logo"> <img src="./fashion_logo1.JPG" alt="" class="ab_icon"> AB's Fashion.com</h1></a>
+        
+        <ul>
+            <li><a href="myorders.html" class="myorders">My Orders <i class="fa-solid fa-bag-shopping"></i></a></li>
+        <div class="profile">
+            <li><a href="#" id="profile"> <i class="bi bi-person"></i> Profile <i class="fas fa-caret-down"></i></a>
+
+
+        
+        <!--------------------------------------Drop down menu Section Here------------------------------>
+        
+        
+        <div class="dropdown-menu">
+        <ul>
+            <li><a href="saved_Addresses.html">Saved Address <i class="bi bi-person-vcard"></i></a></li>  
+            <li><a href="card_details.html">My Card <i class="bi bi-credit-card"></i></a></li>
+            <li><a href="forgot_password.html">Change Password <i class="bi bi-key"></i> </a></li>
+            <li><a href="#contact">About <i class="bi bi-person"></i></a></li>
+            <li><a href="#contact">Contact us <i class="bi bi-telephone"></i></a></li>
+            <li><a href="login.html">LogOut <i class="bi bi-box-arrow-right"></i></a></li>
+        </ul>
+        </div>
+        </div>
+        </li>
+        </ul>
+        </div>
+
+
+
+
+<!-- Hamburger Button -->
+<div class="hamburger" id="hamburger" data-aos="fade-down">
+  <span></span>
+  <span></span>
+  <span></span>
+</div>
+
+<!-- Navigation Menu -->
+<div class="nav-menu" id="navMenu">
+  <button class="close-btn" id="closeMenu">&times;</button>
+  <ul>
+    <li><a href="myorders.html" class="myorders">My Orders <i class="fa-solid fa-bag-shopping"></i></a></li>
+    <li ><a href="saved_Addresses.html">Saved Address <i class="bi bi-person-vcard"></i></a></li>  
+        <li><a href="card_details.html">My Card <i class="bi bi-credit-card"></i></a></li>
+        <li><a href="forgot_password.html">Change Password <i class="bi bi-key"></i> </a></li>
+        <li><a href="#contact">About <i class="bi bi-person"></i></a></li>
+        <li><a href="#contact">Contact us <i class="bi bi-telephone"></i></a></li>
+        <li><a href="login.html">LogOut <i class="bi bi-box-arrow-right"></i></a></li>
+  </ul>
+</div>
+
+
+
+
+
+        
+        <div class="saved_addresses">
+            <h3 data-aos="fade-left" class="saved-heading">Saved Addresses</h3>
+            <a href="main.html" id="fade-link"><button  class="arrow" data-aos="fade-right"><i class="fa-solid fa-arrow-left"></i></button></a>
+              <div class="saved-address" id="address-scroll" data-aos="fade-up"></div>
+        </div>
+
+
+         <!-- Edit Address Modal -->
+<div id="editModal" class="modal">
+    <div class="modal-content">
+      <span class="close-button" onclick="cancelEdit()">&times;</span>
+      
+  
+      <label>Full Name:</label>
+      <input type="text" id="editFullName"><br>
+  
+      <label>Street:</label>
+      <input type="text" id="editStreet"><br>
+  
+      <label>Area:</label>
+      <input type="text" id="editArea"><br>
+  
+      <label>City:</label>
+      <input type="text" id="editCity"><br>
+  
+      <label>District:</label>
+      <input type="text" id="editDistrict"><br>
+  
+      <label>Pincode:</label>
+      <input type="text" id="editPincode"><br>
+  
+      <label>Mobile:</label>
+      <input type="text" id="editMobile"><br>
+  
+      <button class="save-changes" onclick="saveEditedAddress()">Save Changes</button>
+      
+    </div>
+  </div>
+
+  <p class="copy-rights"> <i class="bi bi-c-circle"></i> AB's Fashion.com 2025. All rights reserved.</p>
+
+  <!-------------------------------------Scripting Section here--------------------------------->
+    
+        <script>
+            function displaySavedAddresses() {
+            const savedAddresses = JSON.parse(localStorage.getItem("savedAddresses")) || [];
+            const savedAddressContainer = document.querySelector(".saved-address");
+
+            if (savedAddresses.length === 0) {
+                savedAddressContainer.innerHTML = "<p style='text-align:center; margin-top:160px; color:red;'>No saved addresses found.</p>";
+                return;
+            }
+            savedAddressContainer.innerHTML = "";
+        
+            savedAddresses.forEach((address, index) => {
+                const addressDiv = document.createElement("div");
+                addressDiv.classList.add("address-card");
+        
+                addressDiv.innerHTML = `
+                    
+                    <span class="add_fullName">${address.fullName}</span>
+                    <button class="edit-button" onclick="editAddress(${index})"><i class="fa-solid fa-pen-to-square"></i>edit</button>
+                    <button class="delete-button" onclick="deleteAddress(${index})" ><i class="fa-solid fa-trash"></i>delete</button><br><br>
+                    <span class="add_street">${address.street}</span>, <span class="add_area">${address.area}</span><br>
+                   <span class="add_city"> ${address.city}</span>,<span class="add_district"> ${address.district}</span>, <span class="add_pincode">${address.pincode}</span><br>
+                    <span class="add_mobile">Mobile: ${address.mobile}</span><br><br>
+                    <hr><br>
+                `;
+        
+                savedAddressContainer.appendChild(addressDiv);
+
+                
+            });
+        }
+        
+        
+        function fillAddressForm(index) {
+            const savedAddresses = JSON.parse(localStorage.getItem("savedAddresses")) || [];
+            const address = savedAddresses[index];
+        
+            // Fill the form inputs
+            document.querySelector(".first_name input").value = address.fullName.split(" ")[0] || "";
+            document.querySelector(".last_name input").value = address.fullName.split(" ")[1] || "";
+            document.querySelector(".street input").value = address.street;
+            document.querySelector(".area input").value = address.area;
+            document.querySelector(".city input").value = address.city;
+            document.querySelector(".district input").value = address.district;
+            document.querySelector(".pincode input").value = address.pincode;
+            document.querySelector(".number input").value = address.mobile;
+        }
+        
+        
+        
+        
+            
+            // Call on DOM load
+            document.addEventListener("DOMContentLoaded", function () {
+                displaySavedAddresses();
+            });
+            </script>
+
+<script>
+
+
+    function saveAddress() {
+        const firstName = document.querySelector(".first_name input").value.trim();
+        const lastName = document.querySelector(".last_name input").value.trim();
+        const fullName = firstName + " " + lastName;
+        const street = document.querySelector(".street input").value.trim();
+        const area = document.querySelector(".area input").value.trim();
+        const city = document.querySelector(".city input").value.trim();
+        const district = document.querySelector(".district input").value.trim();
+        const pincode = document.querySelector(".pincode input").value.trim();
+        const mobile = document.querySelector(".number input").value.trim();
+        const isDefault = document.querySelector("input[type='checkbox']").checked;
+    
+        if (!firstName || !lastName || !street || !area || !city || !district || !pincode || !mobile) {
+            alert("Please fill out all required fields.");
+            return;
+        }
+    
+        const address = {
+            fullName,
+            street,
+            area,
+            city,
+            district,
+            pincode,
+            mobile,
+            default: isDefault
+        };
+
+        if(saveAddresss.length > 0){
+            const savedAddresses = JSON.parse(localStorage.getItem("savedAddresses")) || [];
+            const existingAddress = savedAddresses.find(a => a.fullName === fullName && a.street === street && a.area === area && a.city === city && a.district === district && a.pincode === pincode && a.mobile === mobile);
+            if (existingAddress) {
+                alert("This address already exists.");
+                return;
+            }
+        }
+
+
+    
+        let savedAddresses = JSON.parse(localStorage.getItem("savedAddresses")) || [];
+    
+        // If setting default, unset others
+        if (isDefault) {
+            savedAddresses = savedAddresses.map(a => ({ ...a, default: false }));
+        }
+    
+        savedAddresses.push(address);
+        localStorage.setItem("savedAddresses", JSON.stringify(savedAddresses));
+    
+        // Optionally set selected address as the newly added one
+        localStorage.setItem("selectedAddressIndex", savedAddresses.length - 1);
+    
+        // Refresh address list
+        displaySavedAddresses();
+    
+        // Optionally show toast
+        showToast_address();
+    }
+    </script>
+
+
+<script>
+    function useThisAddress(index) {
+        localStorage.setItem("selectedAddressIndex", index);
+        displaySavedAddresses();
+    }
+    
+    function setAsDefault(index) {
+        const savedAddresses = JSON.parse(localStorage.getItem("savedAddresses")) || [];
+        savedAddresses.forEach((address, idx) => {
+            address.default = idx === index;
+        });
+        localStorage.setItem("savedAddresses", JSON.stringify(savedAddresses));
+        displaySavedAddresses();
+    }
+    
+    function deleteAddress(index) {
+        const savedAddresses = JSON.parse(localStorage.getItem("savedAddresses")) || [];
+        savedAddresses.splice(index, 1);
+        localStorage.setItem("savedAddresses", JSON.stringify(savedAddresses));
+       
+        displaySavedAddresses();
+        deleted(); // Call the function to show the toast message
+    }
+
+   
+    
+    </script>
+    
+    <script>
+        function editAddress(index) {
+    const savedAddresses = JSON.parse(localStorage.getItem("savedAddresses")) || [];
+    const address = savedAddresses[index];
+    currentEditIndex = index;
+
+    document.getElementById("editFullName").value = address.fullName;
+    document.getElementById("editStreet").value = address.street;
+    document.getElementById("editArea").value = address.area;
+    document.getElementById("editCity").value = address.city;
+    document.getElementById("editDistrict").value = address.district;
+    document.getElementById("editPincode").value = address.pincode;
+    document.getElementById("editMobile").value = address.mobile;
+
+    document.getElementById("editModal").style.display = "block";
+    
+}
+
+
+
+function cancelEdit() {
+    currentEditIndex = null;
+    document.getElementById("editModal").style.display = "none";
+    document.getElementById("editModal1").style.display = "none";
+}
+
+function saveEditedAddress() {
+    const savedAddresses = JSON.parse(localStorage.getItem("savedAddresses")) || [];
+    if (currentEditIndex === null) return;
+
+    savedAddresses[currentEditIndex] = {
+        ...savedAddresses[currentEditIndex],
+        fullName: document.getElementById("editFullName").value.trim(),
+        street: document.getElementById("editStreet").value.trim(),
+        area: document.getElementById("editArea").value.trim(),
+        city: document.getElementById("editCity").value.trim(),
+        district: document.getElementById("editDistrict").value.trim(),
+        pincode: document.getElementById("editPincode").value.trim(),
+        mobile: document.getElementById("editMobile").value.trim()
+    };
+
+    localStorage.setItem("savedAddresses", JSON.stringify(savedAddresses));
+    displaySavedAddresses();
+    saveChanges(); // Call the function to show the toast message
+    cancelEdit();
+}
+
+    </script>
+
+<!--------------------------------------Transititon Styling section here---------------------------->
+
+<script>
+    function zoomToPage(url) {
+      document.body.classList.add('zoom-out');
+      setTimeout(() => {
+        window.location.href = url;
+      }, 600);
+    }
+  </script>
+
+
+<!----------------------------------Toast Message styling section here------------------------------->
+
+<script>
+    function saveChanges() {
+    const toast = document.getElementById("toast-saveChanges");
+    toast.classList.add("show");
+    setTimeout(() => {
+        toast.classList.remove("show");
+    }, 800); // Toast is visible for 3 seconds
+}
+</script>
+
+
+<script>
+    function deleted() {
+    const toast = document.getElementById("toast-deleted");
+    toast.classList.add("show");
+    setTimeout(() => {
+        toast.classList.remove("show");
+    }, 600); // Toast is visible for 3 secondstoast-saveChanges
+    
+}
+</script>
+
+
+<!----------------------------------Preloader section here----------------------->
+
+
+<script>
+    var loader = document.getElementById('preloader');
+    var loader_text = document.getElementById('loader-text1')
+
+    window.addEventListener('load',function(){
+        loader_text.innerHTML='Please wait a moment...';
+        
+        setTimeout(function (){
+            loader.style.display = "none";
+            
+
+        },600);
+    }
+)
+</script>
+
+
+<script>
+    const body = document.getElementById('address-scroll');
+  
+    body.addEventListener('mouseenter', () => {
+      body.style.overflowY = 'auto'; // Enable scroll on hover
+    });
+  
+    body.addEventListener('mouseleave', () => {
+      body.style.overflowY = 'hidden'; // Disable scroll when mouse leaves
+    });
+  </script>
+
+
+
+
+<script>
+  const hamburger = document.getElementById("hamburger");
+  const navMenu = document.getElementById("navMenu");
+  const closeBtn = document.getElementById("closeMenu");
+
+  hamburger.addEventListener("click", () => {
+    navMenu.classList.add("active");
+    
+    
+  });
+
+  closeBtn.addEventListener("click", () => {
+    navMenu.classList.remove("active");
+    
+    
+  });
+
+  
+</script>
+
+
+
+
+<!-------------------------------AOS section here--------------------------------------------->
+
+<!-- AOS JS -->
+<script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+<script>
+  AOS.init({
+    offset: 200,      // Trigger offset for animations
+      duration: 1000,    // Animation duration in ms
+       once: false,      // Whether animation should happen only once
+  
+  });
+</script>
+
+
+
+</body>
+</html>
