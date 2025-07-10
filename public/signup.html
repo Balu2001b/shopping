@@ -386,7 +386,7 @@ width: 350px;
     }
 
     try {
-      const res = await fetch("/signup", {
+      const res = await fetch("https://shopping-1-39jc.onrender.com", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, email, password })
